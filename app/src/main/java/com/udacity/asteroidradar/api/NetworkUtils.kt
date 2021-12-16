@@ -1,5 +1,6 @@
 package com.udacity.asteroidradar.api
 
+import androidx.lifecycle.Transformations.map
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import org.json.JSONObject
@@ -55,3 +56,23 @@ private fun getNextSevenDaysFormattedDates(): ArrayList<String> {
 
     return formattedDateList
 }
+
+fun ArrayList<Asteroid>.asDatabaseModel(): Array<com.udacity.asteroidradar.database.Asteroid> {
+    return map {
+        com.udacity.asteroidradar.database.Asteroid(
+            id = it.id,
+            codename = it.codename,
+            closeApproachDate = it.closeApproachDate,
+            absoluteMagnitude = it.absoluteMagnitude,
+            estimatedDiameter = it.estimatedDiameter,
+            relativeVelocity = it.relativeVelocity,
+            distanceFromEarth = it.distanceFromEarth,
+            isPotentiallyHazardous = it.isPotentiallyHazardous
+        )
+    }
+        .toTypedArray()
+    }
+
+
+
+
