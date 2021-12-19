@@ -13,11 +13,12 @@ data class Asteroid(
     val estimatedDiameter: Double,
     val relativeVelocity: Double,
     val distanceFromEarth: Double,
-    val isPotentiallyHazardous: Boolean)
+    val isPotentiallyHazardous: Boolean
+)
 
 fun List<com.udacity.asteroidradar.database.Asteroid>.asDomainModel(): List<Asteroid> {
     return map {
-        Asteroid (
+        Asteroid(
             id = it.id,
             codename = it.codename,
             closeApproachDate = it.closeApproachDate,
@@ -25,6 +26,7 @@ fun List<com.udacity.asteroidradar.database.Asteroid>.asDomainModel(): List<Aste
             estimatedDiameter = it.estimatedDiameter,
             relativeVelocity = it.relativeVelocity,
             distanceFromEarth = it.distanceFromEarth,
-            isPotentiallyHazardous = it.isPotentiallyHazardous)
+            isPotentiallyHazardous = it.isPotentiallyHazardous
+        )
     }
 }

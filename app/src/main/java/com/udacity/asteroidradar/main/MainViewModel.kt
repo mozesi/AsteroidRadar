@@ -9,29 +9,28 @@ import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.PictureOfDay
-import com.udacity.asteroidradar.api.*
+import com.udacity.asteroidradar.api.ImageOftheDayApi
 import com.udacity.asteroidradar.repository.Repository
 import kotlinx.coroutines.launch
-import org.json.JSONObject
-import java.lang.Exception
+
 enum class ImageStatus { LOADING, ERROR, DONE }
 
-class MainViewModel (private val repository: Repository) : ViewModel() {
+class MainViewModel(private val repository: Repository) : ViewModel() {
 
-    private val _moveToSelectedAsteroid =  MutableLiveData<Asteroid>()
-    val moveToSelectedAsteroid : LiveData<Asteroid>
-       get() = _moveToSelectedAsteroid
+    private val _moveToSelectedAsteroid = MutableLiveData<Asteroid>()
+    val moveToSelectedAsteroid: LiveData<Asteroid>
+        get() = _moveToSelectedAsteroid
 
     private val _pictureOfTheDay = MutableLiveData<PictureOfDay>()
     val pictureOfTheDay: LiveData<PictureOfDay>
-    get() = _pictureOfTheDay
+        get() = _pictureOfTheDay
 
     private val _status = MutableLiveData<Int>()
     val status: LiveData<Int>
         get() = _status
 
     fun showAstroidDetail(asteroid: Asteroid) {
-             _moveToSelectedAsteroid.value = asteroid
+        _moveToSelectedAsteroid.value = asteroid
     }
 
     fun showAstroidDetailDone() {
@@ -43,12 +42,12 @@ class MainViewModel (private val repository: Repository) : ViewModel() {
 
 
     init {
-        viewModelScope.launch{
+        viewModelScope.launch {
 
             try {
-               repository.getAsteroidsData()
+                repository.getAsteroidsData()
                 Log.i("Asteroids", "good to go")
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 Log.i("Asteroids", e.message.toString())
             }
 
@@ -56,16 +55,16 @@ class MainViewModel (private val repository: Repository) : ViewModel() {
         getImageOfTheDay()
     }
 
-    private fun getImageOfTheDay(){
+    private fun getImageOfTheDay() {
         viewModelScope.launch {
             _status.value = View.VISIBLE
             try {
-               var result = ImageOftheDayApi.retrofitService.getImageofTheDay(Constants.API_KEY)
-                _pictureOfTheDay.value =result
+                var result = ImageOftheDayApi.retrofitService.getImageofTheDay(Constants.API_KEY)
+                _pictureOfTheDay.value = result
                 _status.value = View.GONE
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 _status.value = View.GONE
-                _pictureOfTheDay.value = PictureOfDay("","","","")
+                _pictureOfTheDay.value = PictureOfDay("", "", "", "")
             }
         }
     }

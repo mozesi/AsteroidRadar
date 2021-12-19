@@ -1,6 +1,5 @@
 package com.udacity.asteroidradar.api
 
-import androidx.lifecycle.Transformations.map
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import org.json.JSONObject
