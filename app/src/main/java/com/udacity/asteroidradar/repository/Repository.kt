@@ -14,11 +14,11 @@ import org.json.JSONObject
 
 class Repository(private val asteroidsDao: AsteroidsDao) {
 
-    val asteroids = Transformations.map(asteroidsDao.getAll()){
+    val asteroids = Transformations.map(asteroidsDao.getAll(getToday())){
         it.asDomainModel()
     }
 
-    suspend fun insertAsteroids(){
+    suspend fun getAsteroidsData(){
         withContext(Dispatchers.IO){
             val asteriodsList = parseAsteroidsJsonResult(JSONObject(AsteroidApi.retrofitService.getAsteroids(getToday(), getSeventhDay(),Constants.API_KEY)))
             asteroidsDao.insertAll(*asteriodsList.asDatabaseModel())

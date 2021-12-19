@@ -1,6 +1,7 @@
 package com.udacity.asteroidradar.main
 
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,6 +14,7 @@ import com.udacity.asteroidradar.repository.Repository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.lang.Exception
+enum class ImageStatus { LOADING, ERROR, DONE }
 
 class MainViewModel (private val repository: Repository) : ViewModel() {
 
@@ -24,6 +26,9 @@ class MainViewModel (private val repository: Repository) : ViewModel() {
     val pictureOfTheDay: LiveData<PictureOfDay>
     get() = _pictureOfTheDay
 
+    private val _status = MutableLiveData<Int>()
+    val status: LiveData<Int>
+        get() = _status
 
     fun showAstroidDetail(asteroid: Asteroid) {
              _moveToSelectedAsteroid.value = asteroid
@@ -41,7 +46,7 @@ class MainViewModel (private val repository: Repository) : ViewModel() {
         viewModelScope.launch{
 
             try {
-               repository.insertAsteroids()
+               repository.getAsteroidsData()
                 Log.i("Asteroids", "good to go")
             }catch (e: Exception){
                 Log.i("Asteroids", e.message.toString())
@@ -53,12 +58,14 @@ class MainViewModel (private val repository: Repository) : ViewModel() {
 
     private fun getImageOfTheDay(){
         viewModelScope.launch {
+            _status.value = View.VISIBLE
             try {
                var result = ImageOftheDayApi.retrofitService.getImageofTheDay(Constants.API_KEY)
                 _pictureOfTheDay.value =result
-                Log.i("Asteroids", result.url)
+                _status.value = View.GONE
             }catch (e: Exception){
-                Log.i("Asteroids", e.message.toString())
+                _status.value = View.GONE
+                _pictureOfTheDay.value = PictureOfDay("","","","")
             }
         }
     }
